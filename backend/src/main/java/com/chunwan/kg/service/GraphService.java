@@ -18,12 +18,10 @@ public class GraphService {
     }
 
     public void upsertRelation(RelationRequest request) {
-        if (!ALLOWED_RELATIONS.contains(request.relationType())) {
-            throw new IllegalArgumentException("relationType 仅支持: 参演/导演/主持");
-        }
+        String relationType = sanitizeRelationType(request.relationType());
 
         String cypher = "MATCH (p:Person {id: $personId}), (pr:Program {id: $programId}) " +
-                "MERGE (p)-[r:" + request.relationType() + "]->(pr)";
+                "MERGE (p)-[r:" + relationType + "]->(pr)";
         neo4jClient.query(cypher)
                 .bindAll(Map.of("personId", request.personId(), "programId", request.programId()))
                 .run();
@@ -53,13 +51,23 @@ public class GraphService {
     }
 
     public void deleteRelation(RelationRequest request) {
-        if (!ALLOWED_RELATIONS.contains(request.relationType())) {
-            throw new IllegalArgumentException("relationType 仅支持: 参演/导演/主持");
-        }
-        String cypher = "MATCH (p:Person {id: $personId})-[r:" + request.relationType() + "]->(pr:Program {id: $programId}) DELETE r";
+        String relationType = sanitizeRelationType(request.relationType());
+        String cypher = "MATCH (p:Person {id: $personId})-[r:" + relationType + "]->(pr:Program {id: $programId}) DELETE r";
         neo4jClient.query(cypher)
                 .bindAll(Map.of("personId", request.personId(), "programId", request.programId()))
                 .run();
+    }
+
+    private String sanitizeRelationType(String relationType) {
+        if (!ALLOWED_RELATIONS.contains(relationType)) {
+            throw new IllegalArgumentException("relationType 仅支持: 参演/导演/主持");
+        }
+        return switch (relationType) {
+            case "参演" -> "参演";
+            case "导演" -> "导演";
+            case "主持" -> "主持";
+            default -> throw new IllegalArgumentException("relationType 仅支持: 参演/导演/主持");
+        };
     }
 
     public Map<String, Object> graphData() {

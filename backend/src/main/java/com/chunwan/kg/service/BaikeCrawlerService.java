@@ -8,12 +8,14 @@ import org.springframework.stereotype.Service;
 
 import java.net.URLEncoder;
 import java.nio.charset.StandardCharsets;
-import java.util.Optional;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 @Service
 public class BaikeCrawlerService {
+
+    private static final String DEFAULT_USER_AGENT = "Mozilla/5.0";
+    private static final int CRAWL_TIMEOUT_MS = 10000;
 
     private final PersonRepository personRepository;
 
@@ -26,8 +28,8 @@ public class BaikeCrawlerService {
             String encoded = URLEncoder.encode(name, StandardCharsets.UTF_8);
             String url = "https://baike.baidu.com/item/" + encoded;
             Document doc = Jsoup.connect(url)
-                    .userAgent("Mozilla/5.0")
-                    .timeout(10000)
+                    .userAgent(DEFAULT_USER_AGENT)
+                    .timeout(CRAWL_TIMEOUT_MS)
                     .get();
 
             String fullText = doc.text();

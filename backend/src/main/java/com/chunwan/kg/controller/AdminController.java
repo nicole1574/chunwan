@@ -65,8 +65,12 @@ public class AdminController {
     }
 
     @DeleteMapping("/persons/{id}")
-    public void deletePerson(@PathVariable String id) {
+    public ResponseEntity<Void> deletePerson(@PathVariable String id) {
+        if (!personRepository.existsById(id)) {
+            return ResponseEntity.notFound().build();
+        }
         personRepository.deleteById(id);
+        return ResponseEntity.noContent().build();
     }
 
     @PostMapping("/programs")
@@ -90,8 +94,12 @@ public class AdminController {
     }
 
     @DeleteMapping("/programs/{id}")
-    public void deleteProgram(@PathVariable String id) {
+    public ResponseEntity<Void> deleteProgram(@PathVariable String id) {
+        if (!programRepository.existsById(id)) {
+            return ResponseEntity.notFound().build();
+        }
         programRepository.deleteById(id);
+        return ResponseEntity.noContent().build();
     }
 
     @PostMapping("/years/{year}")
@@ -106,8 +114,12 @@ public class AdminController {
     }
 
     @DeleteMapping("/years/{id}")
-    public void deleteYear(@PathVariable String id) {
+    public ResponseEntity<Void> deleteYear(@PathVariable String id) {
+        if (!yearRepository.existsById(id)) {
+            return ResponseEntity.notFound().build();
+        }
         yearRepository.deleteById(id);
+        return ResponseEntity.noContent().build();
     }
 
     @PostMapping("/programs/{programId}/year/{yearId}")
@@ -125,8 +137,12 @@ public class AdminController {
     }
 
     @DeleteMapping("/roles/{id}")
-    public void deleteRole(@PathVariable String id) {
+    public ResponseEntity<Void> deleteRole(@PathVariable String id) {
+        if (!roleRepository.existsById(id)) {
+            return ResponseEntity.notFound().build();
+        }
         roleRepository.deleteById(id);
+        return ResponseEntity.noContent().build();
     }
 
     @PostMapping("/categories")
@@ -139,8 +155,12 @@ public class AdminController {
     }
 
     @DeleteMapping("/categories/{id}")
-    public void deleteCategory(@PathVariable String id) {
+    public ResponseEntity<Void> deleteCategory(@PathVariable String id) {
+        if (!categoryRepository.existsById(id)) {
+            return ResponseEntity.notFound().build();
+        }
         categoryRepository.deleteById(id);
+        return ResponseEntity.noContent().build();
     }
 
     @PostMapping("/relations")
