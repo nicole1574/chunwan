@@ -1,13 +1,17 @@
 package com.chunwan.kg.controller;
 
 import com.chunwan.kg.dto.RelationRequest;
+import com.chunwan.kg.dto.PdfImportResult;
 import com.chunwan.kg.entity.*;
 import com.chunwan.kg.repository.*;
 import com.chunwan.kg.service.BaikeCrawlerService;
 import com.chunwan.kg.service.GraphService;
+import com.chunwan.kg.service.PdfProgramImportService;
 import jakarta.validation.Valid;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.util.UUID;
 
@@ -22,6 +26,7 @@ public class AdminController {
     private final CategoryRepository categoryRepository;
     private final GraphService graphService;
     private final BaikeCrawlerService baikeCrawlerService;
+    private final PdfProgramImportService pdfProgramImportService;
 
     public AdminController(PersonRepository personRepository,
                            ProgramRepository programRepository,
@@ -29,7 +34,8 @@ public class AdminController {
                            RoleRepository roleRepository,
                            CategoryRepository categoryRepository,
                            GraphService graphService,
-                           BaikeCrawlerService baikeCrawlerService) {
+                           BaikeCrawlerService baikeCrawlerService,
+                           PdfProgramImportService pdfProgramImportService) {
         this.personRepository = personRepository;
         this.programRepository = programRepository;
         this.yearRepository = yearRepository;
@@ -37,6 +43,7 @@ public class AdminController {
         this.categoryRepository = categoryRepository;
         this.graphService = graphService;
         this.baikeCrawlerService = baikeCrawlerService;
+        this.pdfProgramImportService = pdfProgramImportService;
     }
 
     @PostMapping("/persons")
@@ -179,5 +186,10 @@ public class AdminController {
     @PostMapping("/persons/crawl")
     public Person crawlByName(@RequestParam String name) {
         return baikeCrawlerService.crawlAndSave(name);
+    }
+
+    @PostMapping(value = "/programs/import/pdf", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
+    public ResponseEntity<PdfImportResult> importProgramsFromPdf(@RequestPart("file") MultipartFile file) {
+        return ResponseEntity.ok(pdfProgramImportService.importFromPdf(file));
     }
 }
