@@ -23,23 +23,26 @@
 </template>
 
 <script setup>
-import { computed } from 'vue'
+import { onMounted, ref, watch } from 'vue'
 import { useRoute, useRouter } from 'vue-router'
 
 const router = useRouter()
 const route = useRoute()
-const token = computed(() => {
-  route.fullPath
-  return localStorage.getItem('token')
-})
-const isAdmin = computed(() => {
-  route.fullPath
-  return localStorage.getItem('role') === 'ROLE_ADMIN'
-})
+const token = ref('')
+const isAdmin = ref(false)
+
+const syncAuthState = () => {
+  token.value = localStorage.getItem('token') || ''
+  isAdmin.value = localStorage.getItem('role') === 'ROLE_ADMIN'
+}
+
+onMounted(syncAuthState)
+watch(() => route.fullPath, syncAuthState)
 
 const logout = () => {
   localStorage.removeItem('token')
   localStorage.removeItem('role')
+  syncAuthState()
   router.push('/login')
 }
 </script>
