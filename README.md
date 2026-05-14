@@ -51,6 +51,7 @@ npm run dev
 - 管理员：演职人员、节目、年份、关系、身份、关系分类的增删改查
 - 用户：知识图谱查看（只读）
 - 百度百科抓取：输入姓名自动抓取并回填/入库
+- 节目单 PDF 导入：识别各年份节目并自动入库人员、节目、年份与参演关系
 - 联想输入：关系管理中人员与节目支持自动补全
 - 知识图谱可视化：支持拖拽、缩放、关系查看
 
@@ -62,4 +63,5 @@ npm run dev
 - 年份：`/api/years`（GET）, `/api/admin/years/{year}`（POST）
 - 关系：`POST|DELETE /api/admin/relations`
 - 百科抓取：`POST /api/admin/persons/crawl?name=xxx`
+- PDF 导入：`POST /api/admin/programs/import/pdf`（`multipart/form-data`，字段名 `file`）
 - 图谱数据：`GET /api/graph`

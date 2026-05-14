@@ -11,6 +11,15 @@
         </el-select>
       </el-form-item>
       <el-form-item><el-button type="primary" @click="save">保存</el-button></el-form-item>
+      <el-form-item>
+        <el-upload
+          accept=".pdf"
+          :show-file-list="false"
+          :http-request="uploadPdf"
+        >
+          <el-button>导入节目单 PDF</el-button>
+        </el-upload>
+      </el-form-item>
     </el-form>
 
     <el-table :data="programs" style="margin-top: 12px">
@@ -67,6 +76,22 @@ const save = async () => {
     await load()
   } catch {
     ElMessage.error('保存失败，可能重复')
+  }
+}
+
+const uploadPdf = async (options) => {
+  try {
+    const formData = new FormData()
+    formData.append('file', options.file)
+    const { data } = await api.post('/api/admin/programs/import/pdf', formData, {
+      headers: { 'Content-Type': 'multipart/form-data' }
+    })
+    ElMessage.success(`导入完成：年份${data.yearsCreated}，节目${data.programsCreated}，人员${data.personsCreated}，关系${data.relationsCreated}`)
+    await load()
+    options.onSuccess?.(data)
+  } catch (e) {
+    ElMessage.error(e?.response?.data?.message || 'PDF 导入失败')
+    options.onError?.(e)
   }
 }
 
