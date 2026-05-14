@@ -18,6 +18,7 @@ import java.util.ArrayList;
 import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Locale;
+import java.util.Optional;
 import java.util.Set;
 import java.util.UUID;
 import java.util.regex.Matcher;
@@ -117,8 +118,9 @@ public class PdfProgramImportService {
 
                 String type = extractType(body);
                 String storedProgramName = current.year + "-" + title;
-                boolean programExisted = programRepository.findByName(storedProgramName).isPresent();
-                Program program = programRepository.findByName(storedProgramName).orElseGet(() -> {
+                Optional<Program> existingProgram = programRepository.findByName(storedProgramName);
+                boolean programExisted = existingProgram.isPresent();
+                Program program = existingProgram.orElseGet(() -> {
                     Program created = new Program();
                     created.setId(UUID.randomUUID().toString());
                     created.setName(storedProgramName);
@@ -134,8 +136,9 @@ public class PdfProgramImportService {
 
                 List<String> performers = extractPerformers(body);
                 for (String performerName : performers) {
-                    boolean personExisted = personRepository.findByName(performerName).isPresent();
-                    Person person = personRepository.findByName(performerName).orElseGet(() -> {
+                    Optional<Person> existingPerson = personRepository.findByName(performerName);
+                    boolean personExisted = existingPerson.isPresent();
+                    Person person = existingPerson.orElseGet(() -> {
                         Person created = new Person();
                         created.setId(UUID.randomUUID().toString());
                         created.setName(performerName);
