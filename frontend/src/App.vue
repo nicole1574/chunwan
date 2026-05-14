@@ -24,11 +24,18 @@
 
 <script setup>
 import { computed } from 'vue'
-import { useRouter } from 'vue-router'
+import { useRoute, useRouter } from 'vue-router'
 
 const router = useRouter()
-const token = computed(() => localStorage.getItem('token'))
-const isAdmin = computed(() => localStorage.getItem('role') === 'ROLE_ADMIN')
+const route = useRoute()
+const token = computed(() => {
+  route.fullPath
+  return localStorage.getItem('token')
+})
+const isAdmin = computed(() => {
+  route.fullPath
+  return localStorage.getItem('role') === 'ROLE_ADMIN'
+})
 
 const logout = () => {
   localStorage.removeItem('token')
