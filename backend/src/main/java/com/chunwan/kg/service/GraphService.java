@@ -63,9 +63,9 @@ public class GraphService {
     }
 
     public Map<String, Object> graphData() {
-        List<Map<String, Object>> nodes = neo4jClient.query("MATCH (n) RETURN id(n) AS vid, labels(n) AS labels, properties(n) AS props")
+        Collection<Map<String, Object>> nodes = neo4jClient.query("MATCH (n) RETURN id(n) AS vid, labels(n) AS labels, properties(n) AS props")
                 .fetch().all();
-        List<Map<String, Object>> links = neo4jClient.query("MATCH (a)-[r]->(b) RETURN id(a) AS source, id(b) AS target, type(r) AS type, properties(r) AS props")
+        Collection<Map<String, Object>> links = neo4jClient.query("MATCH (a)-[r]->(b) RETURN id(a) AS source, id(b) AS target, type(r) AS type, properties(r) AS props")
                 .fetch().all();
         Map<String, Object> result = new HashMap<>();
         result.put("nodes", nodes);
