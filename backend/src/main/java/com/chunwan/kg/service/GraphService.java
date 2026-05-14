@@ -62,12 +62,7 @@ public class GraphService {
         if (!ALLOWED_RELATIONS.contains(relationType)) {
             throw new IllegalArgumentException("relationType 仅支持: 参演/导演/主持");
         }
-        return switch (relationType) {
-            case "参演" -> "参演";
-            case "导演" -> "导演";
-            case "主持" -> "主持";
-            default -> throw new IllegalArgumentException("relationType 仅支持: 参演/导演/主持");
-        };
+        return relationType;
     }
 
     public Map<String, Object> graphData() {

@@ -123,8 +123,9 @@ public class AdminController {
     }
 
     @PostMapping("/programs/{programId}/year/{yearId}")
-    public void bindProgramYear(@PathVariable String programId, @PathVariable String yearId) {
+    public ResponseEntity<Void> bindProgramYear(@PathVariable String programId, @PathVariable String yearId) {
         graphService.linkProgramYear(programId, yearId);
+        return ResponseEntity.noContent().build();
     }
 
     @PostMapping("/roles")
@@ -164,13 +165,15 @@ public class AdminController {
     }
 
     @PostMapping("/relations")
-    public void createRelation(@Valid @RequestBody RelationRequest request) {
+    public ResponseEntity<Void> createRelation(@Valid @RequestBody RelationRequest request) {
         graphService.upsertRelation(request);
+        return ResponseEntity.noContent().build();
     }
 
     @DeleteMapping("/relations")
-    public void deleteRelation(@Valid @RequestBody RelationRequest request) {
+    public ResponseEntity<Void> deleteRelation(@Valid @RequestBody RelationRequest request) {
         graphService.deleteRelation(request);
+        return ResponseEntity.noContent().build();
     }
 
     @PostMapping("/persons/crawl")
